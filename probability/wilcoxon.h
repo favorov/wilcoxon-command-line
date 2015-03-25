@@ -6,6 +6,14 @@
 
 #ifndef _WILCOXON_H
 #define _WILCOXON_H
+
+typedef enum {two-tail=0,lower-tail=1,upper-tail=2} hypothesis; 
+
+double wilcoxon_p_value
+				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp,
+				double * frqncy, double * work);
+
+
 double wilcoxon_z_likelihood
 				(unsigned long i,unsigned long m, unsigned long n,
 				double * frqncy, double * work);
