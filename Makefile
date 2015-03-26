@@ -8,11 +8,11 @@
 name=wilcoxon_command_line
 exename=wilcoxon_command_line
 
-
+cd=.
 wd=./probability
 od=./obj
 
-srcdirlist=$(pd):$(ud):$(md):$(ad):$(cd):$(wd):$(nd)
+srcdirlist=$(cd):$(wd)
 
 empty=
 space=$(empty) $(empty)
@@ -35,17 +35,17 @@ $(od)/wilcoxon.o
 $(od)/%.o: %.c
 	$(CC) $(CCFLAGS) $< -o $@
 
-$(od)/%.o: %.cpp
+$(od)/%.o: %.cc
 	$(CPP) $(CPPFLAGS) $< -o $@
 
 $(exename)$(EXEEXT): $(OBJS)
-	$(CC) -o $(exename)$(EXEEXT) $(OBJS) $(LINKFLAGS) 
+	$(CPP) -o $(exename)$(EXEEXT) $(OBJS) $(LINKFLAGS) 
 	chmod 755 $(exename)$(EXEEXT) 
 
 $(od)/wilcoxon.o $(od)/gauss.o : $(wd)/gauss.h
 $(od)/$(name).o $(od)/wicoxon.o : $(wd)/wilcoxon.h
 
-$(od)/$(name).o : $(ad)/$(name).cc
+$(od)/$(name).o : $(cd)/$(name).cc
 $(od)/gauss.o : $(wd)/gauss.h
 $(od)/wicoxon.o : $(wd)/wilcoxon.c
 

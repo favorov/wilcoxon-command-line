@@ -80,7 +80,7 @@ endif
 
 ifdef CYGWIN
 ifdef GCC4
-LINKFLAGS=$(LINKGLAGS) --enable-auto-import
+LINKFLAGS=$(LINKGLAGS) 
 endif
 endif
 

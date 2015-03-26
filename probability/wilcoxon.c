@@ -79,7 +79,7 @@ double * udist(unsigned long m, unsigned long n,
 
 
 double wilcoxon_p_value
-				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp
+				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp,
 				double * frqncy, double * work)
 /*
  * returns p-value  of i inversions in set of m x's an y y's.
@@ -103,7 +103,7 @@ double wilcoxon_p_value
 	l=m*n;
 	for (k=0;k<=l;k++) sum+= frqncy[k];
 	if(2*i>l) imin=l-i;
-	for (k=0;k<=inim;k++) tail_weight+= frqncy[k];
+	for (k=0;k<=imin;k++) tail_weight+= frqncy[k];
 	if (lowerTail==hyp) 
 	{
 		if (2*i<=l) return tail_weight/sum;
@@ -116,7 +116,7 @@ double wilcoxon_p_value
 	}
 	//twoTail==hyp
 	if (i==l) return 1.;
-	return (2.*tail_weight/sum)
+	return (2.*tail_weight/sum);
 }
 
 double wilcoxon_z_likelihood
@@ -161,7 +161,7 @@ double wilcoxon_norm_equvalent
 }
 
 double wilcoxon_p_value_exp
-				(unsigned long i,unsigned long m, unsigned long n)
+				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp)
 /*
  *  g>3,h>3
  * 
