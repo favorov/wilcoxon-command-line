@@ -13,6 +13,9 @@ double wilcoxon_p_value
 				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp,
 				double * frqncy, double * work);
 
+double wilcoxon_p_value__exp
+				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp);
+
 
 double wilcoxon_z_likelihood
 				(unsigned long i,unsigned long m, unsigned long n,
