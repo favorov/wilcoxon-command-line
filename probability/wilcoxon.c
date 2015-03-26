@@ -77,6 +77,48 @@ double * udist(unsigned long m, unsigned long n,
 	return frqncy;	
 } /* udist */
 
+
+double wilcoxon_p_value
+				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp
+				double * frqncy, double * work)
+/*
+ * returns p-value  of i inversions in set of m x's an y y's.
+ * frqncy and work are double arrays prellocated as
+ * desribed in comment to udist.
+ * frqncy[0..m*n]
+ * work is not less than (m*n + 2) / 2) + min(m,n) + 1
+ */
+{
+	double sum=0,tail_weight=0;
+	unsigned long k,l,imin=i;
+	if (i>m*n) return 0;
+	if (m==0 || n==0) return 1;
+	//if one class if empty, inv. number == 0 whatever
+	if (m==1)
+		return 1./(double)(n+1);
+	if (n==1)
+		return 1./(double)(m+1);
+	if (m>3&&n>3&&m+n>=30) return wilcoxon_p_value_exp(i,m,n,hyp);
+	udist(m,n,frqncy,work);
+	l=m*n;
+	for (k=0;k<=l;k++) sum+= frqncy[k];
+	if(2*i>l) imin=l-i;
+	for (k=0;k<=inim;k++) tail_weight+= frqncy[k];
+	if (lowerTail==hyp) 
+	{
+		if (2*i<=l) return tail_weight/sum;
+		return (1.-tail_weight/sum);
+	}
+	if (upperTail==hyp)
+	{
+		if (2*i>l) return tail_weight/sum;
+		return (1.-tail_weight/sum);
+	}
+	//twoTail==hyp
+	if (i==l) return 1.;
+	return (2.*tail_weight/sum)
+}
+
 double wilcoxon_z_likelihood
 				(unsigned long i,unsigned long m, unsigned long n,
 				double * frqncy, double * work)
@@ -117,6 +159,41 @@ double wilcoxon_norm_equvalent
 				)
 			);
 }
+
+double wilcoxon_p_value_exp
+				(unsigned long i,unsigned long m, unsigned long n)
+/*
+ *  g>3,h>3
+ * 
+ *  if g+h>=20 we can approximate p 
+ *                                  /          i - mn/2             \
+ *  as dustributed as Gauss[0,1]   | ------------------------------  |
+ *                                  \ [ 1/12 mn (m + n + 1) ] ^ 1/2 /
+ * 
+ *  It is Gaussian approximaton for previous case.
+ * 
+ *  MATEMATISHE STATISTIK von
+ *  Dr B.I. Van Der Varden
+ *  Springer-Verlag BEGLIN-GOTTINGEN-HEIDELBERG, 1957
+ *  chapter XII. Section 63.
+ */
+{
+	double doublei,c1,c2;
+//	if (i<0) return 0;
+	if (i>m*n) return 0;
+//	if (i==0) return cgauss(wilcoxon_norm_equvalent(.5,m,n));
+//	if (i==m*n) return (double)1.-cgauss(wilcoxon_norm_equvalent(m*n-.5,m,n));
+
+// doublei=(double)i;
+//So, we've replaced the line:
+	doublei=(double)(2*i>n*m?m*n-i:i);
+//Linux/Athlon gives a buggy result here for i close to mn.
+	c1=	cgauss(wilcoxon_norm_equvalent(doublei+.5,m,n));
+	c2= cgauss(wilcoxon_norm_equvalent(doublei-.5,m,n));
+//	printf ("-> %30.20f   %30.20f\n",c1,c2);
+	return (c1-c2); 
+}
+
 
 double wilcoxon_z_likelihood_exp
 				(unsigned long i,unsigned long m, unsigned long n)
