@@ -13,9 +13,34 @@ double wilcoxon_p_value
 				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp,
 				double * frqncy, double * work);
 
-double wilcoxon_p_value__exp
+/*
+ * returns p-value of i inversions in set of m x's and n y's.
+ * frqncy and work are double arrays prellocated as
+ * desribed in comment to udist.
+ * frqncy[0..m*n]
+ * work is not less than (m*n + 2) / 2) + min(m,n) + 1
+ * As far as we are going to use the Gaussian for m+n>=30, m>3,n>3
+ * the maximal *work is (225+2)/2+15+1=130 (let it be 150) (it is for m,n>3) or (max(m,n)*3+2)/2 + 3 + 1
+ * the maximal frqncy is: 226 ... let it be 250 (it is for m,n>3) or max(m,n)*3 + 1
+*/
+
+double wilcoxon_p_value_exp
 				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp);
 
+/*
+ *  if m+n>=20 ; m>3, n>3 we can approximate p 
+ *                                  /          i - mn/2             \
+ *  as dustributed as Gauss[0,1]   | ------------------------------  |
+ *                                  \ [ 1/12 mn (m + n + 1) ] ^ 1/2 /
+ * 
+ *  It is Gaussian approximaton for previous case.
+ *  We use 30 !!!!
+ *
+ *  MATEMATISHE STATISTIK von
+ *  Dr B.I. Van Der Varden
+ *  Springer-Verlag BEGLIN-GOTTINGEN-HEIDELBERG, 1957
+ *  chapter XII. Section 63.
+ */
 
 double wilcoxon_z_likelihood
 				(unsigned long i,unsigned long m, unsigned long n,
