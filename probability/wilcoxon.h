@@ -7,7 +7,7 @@
 #ifndef _WILCOXON_H
 #define _WILCOXON_H
 
-typedef enum {two-tail=0,lower-tail=1,upper-tail=2} hypothesis; 
+typedef enum {twoTail=0,lowerTail=1,upperTail=2} hypothesis; 
 
 double wilcoxon_p_value
 				(unsigned long i,unsigned long m, unsigned long n, hypothesis hyp,

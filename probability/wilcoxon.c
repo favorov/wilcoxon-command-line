@@ -178,20 +178,12 @@ double wilcoxon_p_value_exp
  *  chapter XII. Section 63.
  */
 {
-	double doublei,c1,c2;
-//	if (i<0) return 0;
-	if (i>m*n) return 0;
-//	if (i==0) return cgauss(wilcoxon_norm_equvalent(.5,m,n));
-//	if (i==m*n) return (double)1.-cgauss(wilcoxon_norm_equvalent(m*n-.5,m,n));
-
-// doublei=(double)i;
-//So, we've replaced the line:
-	doublei=(double)(2*i>n*m?m*n-i:i);
-//Linux/Athlon gives a buggy result here for i close to mn.
-	c1=	cgauss(wilcoxon_norm_equvalent(doublei+.5,m,n));
-	c2= cgauss(wilcoxon_norm_equvalent(doublei-.5,m,n));
-//	printf ("-> %30.20f   %30.20f\n",c1,c2);
-	return (c1-c2); 
+	double tail;
+	tail=cgauss(wilcoxon_norm_equvalent(i,m,n));
+	
+	if (lowerTail==hyp) return tail; 
+	if (upperTail==hyp) return 1-tail;
+	return 2.*tail;
 }
 
 
