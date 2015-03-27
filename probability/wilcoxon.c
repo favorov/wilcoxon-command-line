@@ -126,8 +126,8 @@ double wilcoxon_p_value
 	if(2*i>l) imin=l-i;
 	for (k=0;k<=imin;k++) tail_weight+= frqncy[k];
 	
-	if(me_alloc_frq)delete(frq);
-	if(me_alloc_work)delete(work);
+	if(me_alloc_frq)free(frqncy);
+	if(me_alloc_work)free(work);
 
 	if (lowerTail==hyp) 
 	{
@@ -195,8 +195,8 @@ double wilcoxon_z_likelihood
 	l=m*n;
 	for (k=0;k<=l;k++) sum+= frqncy[k];
 	
-	if(me_alloc_frq)delete(frq);
-	if(me_alloc_work)delete(work);
+	if(me_alloc_frq)free(frqncy);
+	if(me_alloc_work)free(work);
 	
 	return frqncy[i]/sum;
 }

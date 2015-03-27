@@ -47,7 +47,8 @@ int main(int argc,char ** argv)
 
 	for(std::istream_iterator<std::string> input (std::cin);input!=eos;input++)
 	{
-		char * ptr, *str;
+		char * ptr; 
+		const char * str;
 		//std::cout<<*input<<std::endl;
 		counter++;
 		str=input->c_str();
@@ -60,11 +61,11 @@ int main(int argc,char ** argv)
 		
 		if(0==tst0_len) break; //0 breaks
 
-		tester0=calloc(tst0_len,sizeof(double))
+		tester0=(double*)calloc(tst0_len,sizeof(double));
 		assert(tester0);
 		if (!tester0)
 		{
-			fprintf(stderr,"Allocation for list 0  failed at word counter "<<counter<<" (1-based).\n");
+			std::cerr<<"Allocation for list 0  failed at word counter "<<counter<<" (1-based)."<<std::endl;
 			exit(-500);
 		}
 		
@@ -83,11 +84,11 @@ int main(int argc,char ** argv)
 		}
 		
 
-		tester1=calloc(tst1_len,sizeof(double))
+		tester1=(double*)calloc(tst1_len,sizeof(double));
 		assert(tester1);
 		if (!tester1)
 		{
-			fprintf(stderr,"Allocation for list 1  failed at word counter "<<counter<<" (1-based).\n");
+			std::cerr<<"Allocation for list 1  failed at word counter "<<counter<<" (1-based)."<<std::endl;
 			exit(-500);
 		}
 		
@@ -100,7 +101,7 @@ int main(int argc,char ** argv)
 			}
 			counter++;
 			str=input->c_str();
-			tester0[i]=strtod(str,&ptr,0);
+			tester0[i]=strtod(str,&ptr);
 			if (0 != str+input->length()-ptr)
 			{
 				std::cerr<<"Word "<<counter<<" (1-based) is not double (supposed to be element "<<i<<" in list 0)."<<std::endl;
@@ -108,7 +109,7 @@ int main(int argc,char ** argv)
 			}
 		}
 
-		for (unsigned int i=0;i<tst0_len;i++)
+		for (unsigned int i=0;i<tst1_len;i++)
 		{
 			if (eos==++input)
 			{
@@ -117,7 +118,7 @@ int main(int argc,char ** argv)
 			}
 			counter++;
 			str=input->c_str();
-			tester1[i]=strtod(str,&ptr,0);
+			tester1[i]=strtod(str,&ptr);
 			if (0 != str+input->length()-ptr)
 			{
 				std::cerr<<"Word "<<counter<<" (1-based) is not double (supposed to be element "<<i<<" in list 1)."<<std::endl;
