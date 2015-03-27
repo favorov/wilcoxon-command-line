@@ -90,10 +90,6 @@ double wilcoxon_p_value
 	if (i>m*n) return 0;
 	if (m==0 || n==0) return 1;
 	//if one class if empty, inv. number == 0 whatever
-	if (m==1)
-		return 1./(double)(n+1);
-	if (n==1)
-		return 1./(double)(m+1);
 	if (m>3&&n>3&&m+n>=30) return wilcoxon_p_value_exp(i,m,n,hyp);
 	//here, we work with exact test. 
 	//Let's check wheteher our frqncy and work are enough
@@ -140,7 +136,7 @@ double wilcoxon_p_value
 		return (1.-tail_weight/sum);
 	}
 	//twoTail==hyp
-	if (i==l) return 1.;
+	if (2*i==l) return 1.;
 	return (2.*tail_weight/sum);
 }
 
