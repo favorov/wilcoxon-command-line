@@ -1,9 +1,3 @@
-/***************************************************************\
-  APSampler. Looking for complex genetic interaction patterns 
- by a Metropolis-Hastings MCMC project. (c) A. Favorov 1999-2010
-    $Id$
-\***************************************************************/
-
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -91,6 +85,8 @@ double wilcoxon_p_value
 {
 	double sum=0,tail_weight=0;
 	unsigned long k,l,imin=i;
+	unsigned long minmn = m>n?n:m;
+	unsigned int me_alloc_frq=0,me_alloc_work=0;
 	if (i>m*n) return 0;
 	if (m==0 || n==0) return 1;
 	//if one class if empty, inv. number == 0 whatever
@@ -99,11 +95,40 @@ double wilcoxon_p_value
 	if (n==1)
 		return 1./(double)(m+1);
 	if (m>3&&n>3&&m+n>=30) return wilcoxon_p_value_exp(i,m,n,hyp);
+	//here, we work with exact test. 
+	//Let's check wheteher our frqncy and work are enough
+	if(m*n+1 > usual_frq_size)
+	{
+		me_alloc_frq=1;
+		frqncy=(double*)calloc(m*n+1,sizeof(double));
+		assert(frqncy);
+		if (!frqncy)
+		{
+			fprintf(stderr,"Allocation for in-method frq failed.\n");
+			exit(-500);
+		}
+	}
+	if( ((m*n + 2) / 2) + minmn + 1 > usual_work_size)
+	{
+		me_alloc_work=1;
+		work=(double*)calloc(((m*n + 2) / 2) + minmn + 1,sizeof(double));
+		assert(work);
+		if (!work)
+		{
+			fprintf(stderr,"Allocation for in-method work failed.\n");
+			exit(-500);
+		}
+	}
+	
 	udist(m,n,frqncy,work);
 	l=m*n;
 	for (k=0;k<=l;k++) sum+= frqncy[k];
 	if(2*i>l) imin=l-i;
 	for (k=0;k<=imin;k++) tail_weight+= frqncy[k];
+	
+	if(me_alloc_frq)delete(frq);
+	if(me_alloc_work)delete(work);
+
 	if (lowerTail==hyp) 
 	{
 		if (2*i<=l) return tail_weight/sum;
@@ -132,6 +157,8 @@ double wilcoxon_z_likelihood
 {
 	double sum=0;
 	unsigned long k,l;
+	unsigned long minmn = m>n?n:m;
+	unsigned int me_alloc_frq=0,me_alloc_work=0;
 	if (i>m*n) return 0;
 	if (m==0 || n==0) return 1;
 	//if one class if empty, inv. number == 0 whatever
@@ -140,9 +167,37 @@ double wilcoxon_z_likelihood
 	if (n==1)
 		return 1./(double)(m+1);
 	if (m>3&&n>3&&m+n>=30) return wilcoxon_z_likelihood_exp(i,m,n);
+	//here, we work with exact test. 
+	//Let's check wheteher our frqncy and work are enough
+	if(m*n+1 > usual_frq_size)
+	{
+		me_alloc_frq=1;
+		frqncy=(double*)calloc(m*n+1,sizeof(double));
+		assert(frqncy);
+		if (!frqncy)
+		{
+			fprintf(stderr,"Allocation for in-method frq failed.\n");
+			exit(-500);
+		}
+	}
+	if( ((m*n + 2) / 2) + minmn + 1 > usual_work_size)
+	{
+		me_alloc_work=1;
+		work=(double*)calloc(((m*n + 2) / 2) + minmn + 1,sizeof(double));
+		assert(work);
+		if (!work)
+		{
+			fprintf(stderr,"Allocation for in-method work failed.\n");
+			exit(-500);
+		}
+	}
 	udist(m,n,frqncy,work);
 	l=m*n;
 	for (k=0;k<=l;k++) sum+= frqncy[k];
+	
+	if(me_alloc_frq)delete(frq);
+	if(me_alloc_work)delete(work);
+	
 	return frqncy[i]/sum;
 }
 

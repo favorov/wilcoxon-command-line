@@ -7,6 +7,9 @@
 #ifndef _WILCOXON_H
 #define _WILCOXON_H
 
+const unsigned long usual_frq_size=150;
+const unsigned long usual_work_size=250;
+
 typedef enum {twoTail=0,lowerTail=1,upperTail=2} hypothesis; 
 
 double wilcoxon_p_value
