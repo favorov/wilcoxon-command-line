@@ -1,8 +1,8 @@
 /***************************************************************\
-  APSampler. Looking for complex genetic interaction patterns 
- by a Metropolis-Hastings MCMC project. (c) A. Favorov 1999-2010
-    $Id$
+wilcoxon-command-line (c) A. Favorov 2015	
+$Id$
 \***************************************************************/
+
 
 #ifndef _GAUSS_H_
 #define _GAUSS_H_
