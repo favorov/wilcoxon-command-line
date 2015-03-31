@@ -3,8 +3,8 @@
 #$Id$
 #***************************************************************
 
-name=wilcoxon_command_line
-exename=wilcoxon_command_line
+name=wilcoxon-command-line
+exename=wilcoxon-command-line
 
 cd=.
 #current dir
