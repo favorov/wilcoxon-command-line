@@ -1,15 +1,15 @@
-#*****************************************************************
-#  APSampler. Looking for complex genetic interaction patterns 
-# by a Metropolis-Hastings MCMC project. (c) A. Favorov 1999-2010
-#    $Id$
-#*****************************************************************
+#***************************************************************
+#wilcoxon-command-line (c) A. Favorov 2015	
+#$Id$
+#***************************************************************
 
-#this file can be started only from parent directory
 name=wilcoxon_command_line
 exename=wilcoxon_command_line
 
 cd=.
+#current dir
 wd=./probability
+#wilcoxon and other distributions
 od=./obj
 
 srcdirlist=$(cd):$(wd)
@@ -26,7 +26,10 @@ include ccvars
 vpath %.c $(srcdirlist)
 vpath %.cc $(srcdirlist)
 
-all: $(exename)$(EXEEXT) 
+all: $(od) $(exename)$(EXEEXT) 
+
+$(od):
+	mkdir -p $(od)
 
 OBJS=$(od)/$(name).o \
 $(od)/gauss.o \
