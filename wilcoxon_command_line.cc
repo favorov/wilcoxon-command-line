@@ -12,6 +12,8 @@ $Id$
 #include <iomanip>
 #include <iterator>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 extern "C" {
 	#include "wilcoxon.h"
@@ -21,7 +23,7 @@ extern "C" {
 wilcoxon-command-line
 Command-line utitlity to calculate Wilcoxon p-value
 
-wilcoxon-command-line [swithes] < input 
+wilcoxon-command-line [switches] < input 
 
 If --taged switch is not given, the input is:
 N_1 M_1 x_1_1.....x_N_1 y_1_1......y_M_1 
@@ -42,11 +44,43 @@ the hypothesis parametesr is (only one is allowed in one run):
 -l (--lower, --lower-tail) for alternative med(x) >= med(y) (lower tail)
 -u (--upper, --upper-tail) for alternative med(x) <=med(y)  (upper tail)
 
-The first two are integers, the other are doubles.
-If the stream stops before all the N+M values are read
-or the first two values 
+The first two numerics in cycle are to be integers, the other are doubles.
+Stops on end-of-stream or if or the first given length (not tag) is zero.
 	
 */
+
+void help()
+{
+std::cout<<std::endl<<
+"wilcoxon-command-line"<<std::endl<<
+"Command-line utitlity to calculate Wilcoxon p-value"<<std::endl<<
+""<<std::endl<<
+"wilcoxon-command-line [switches] < input "<<std::endl<<
+""<<std::endl<<
+"If --taged switch is not given, the input is:"<<std::endl<<
+"N_1 M_1 x_1_1.....x_N_1 y_1_1......y_M_1 "<<std::endl<<
+"N_2 M_2 x_1_2.....x_N_2 y_1_2......y_M_2"<<std::endl<<
+"......."<<std::endl<<
+"in cycle."<<std::endl<<
+""<<std::endl<<
+"If --tagged (-t) switch is given, the input is:"<<std::endl<<
+"tag1 N_1 M_1 x_1_1.....x_N_1 y_1_1......y_M_1 "<<std::endl<<
+"tag2 N_2 M_2 x_1_2.....x_N_2 y_1_2......y_M_2"<<std::endl<<
+"......."<<std::endl<<
+"in cycle. The tag has no spaces."<<std::endl<<
+""<<std::endl<<
+"Each group N,M and M+N values after it is one test (one p-value)"<<std::endl<<
+""<<std::endl<<
+"the hypothesis parametesr is (only one is allowed in one run): "<<std::endl<<
+"-w (--two, --two-tail) for two-tail (default)"<<std::endl<<
+"-l (--lower, --lower-tail) for alternative med(x) >= med(y) (lower tail)"<<std::endl<<
+"-u (--upper, --upper-tail) for alternative med(x) <=med(y)  (upper tail)"<<std::endl<<
+""<<std::endl<<
+"The first two are integers, the other are doubles."<<std::endl<<
+"The first two numerics in cycle are to be integers, the other are doubles."<<std::endl<<
+"Stops on end-of-stream or if or the first given length (not tag) is zero."<<std::endl;
+}
+
 int main(int argc,char ** argv)
 {
 	unsigned long tst0_len,tst1_len,inv,counter=0;
@@ -56,19 +90,122 @@ int main(int argc,char ** argv)
 	double *work; //[gene_sets_number]
 	//we will test+alloc frq and size inside p_value code
 
-	
-	bool tagged;
-	hypothesis hyp;
+	bool tagged=false;
+	hypothesis hyp=twoTail;
 
+	unsigned int arguments_reflected=0;
+	bool hyp_given=false;
+	std::vector <std::string> args;
+	for (int argn=1;argn<argc;argn++)
+		args.push_back(argv[argn]);
+	// command-line switches
+	if
+	(
+		std::find(args.begin(),args.end(),
+						"-?")
+		!=args.end()
+		||
+		std::find(args.begin(),args.end(),
+						"-h")
+		!=args.end()
+		||
+		std::find(args.begin(),args.end(),
+				"--help")
+		!=args.end()
+  )
+	{
+		help();
+		return 0;
+	}
 
+	if
+	(
+		find(args.begin(),args.end(),
+				"--tagged")
+		!=args.end()
+		||
+		std::find(args.begin(),args.end(),
+				"-t")
+		!=args.end()
+  )
+	{
+		tagged=true;
+		arguments_reflected++;
+	}
 
+	if
+	(
+		find(args.begin(),args.end(),
+				"-l")
+		!=args.end()
+		||
+		std::find(args.begin(),args.end(),
+				"--lower")
+		!=args.end()
+		||
+		std::find(args.begin(),args.end(),
+				"--lower-tail")
+		!=args.end()
+  )
+	{
+		if(hyp_given)
+		{
+			fprintf(stderr,"Hypothesis is given twice. Ask wilcoxon-command-line --help.\n");
+			exit(-10);
+		}
+		hyp=lowerTail; 
+		hyp_given=true;
+		arguments_reflected++;
+	}
 
-
-
-
-
-
-
+	if
+	(
+		find(args.begin(),args.end(),
+				"-u")
+		!=args.end()
+		||
+		std::find(args.begin(),args.end(),
+				"--upper")
+		!=args.end()
+		||
+		std::find(args.begin(),args.end(),
+				"--upper-tail")
+		!=args.end()
+  )
+	{
+		if(hyp_given)
+		{
+			fprintf(stderr,"Hypothesis is given twice. Ask wilcoxon-command-line --help.\n");
+			exit(-10);
+		}
+		hyp=upperTail; 
+		hyp_given=true;
+		arguments_reflected++;
+	}
+	if
+	(
+		find(args.begin(),args.end(),
+				"-w")
+		!=args.end()
+		||
+		std::find(args.begin(),args.end(),
+				"--two")
+		!=args.end()
+		||
+		std::find(args.begin(),args.end(),
+				"--two-tail")
+		!=args.end()
+  )
+	{
+		if(hyp_given)
+		{
+			fprintf(stderr,"Hypothesis is given twice. Ask wilcoxon-command-line --help.\n");
+			exit(-10);
+		}
+		hyp=twoTail; 
+		hyp_given=true;
+		arguments_reflected++;
+	}
 
 
 
@@ -93,6 +230,17 @@ int main(int argc,char ** argv)
 	{
 		char * ptr; 
 		const char * str;
+		std::string tag;
+		if (tagged)
+		{
+			counter++;
+			tag=*input;
+			if (eos==++input)
+			{
+				std::cerr<<"Unexpected eos after word "<<counter<<" (1-based). We supposed to have population of list 0 after tag."<<std::endl;
+				exit(-50);
+			}
+		}
 		//std::cout<<*input<<std::endl;
 		counter++;
 		str=input->c_str();
@@ -170,8 +318,9 @@ int main(int argc,char ** argv)
 			}
 		}
 
-		inv=inversions(tst0_len, tester0, tst1_len, tester1);	
-		std::cout<<wilcoxon_p_value( inv, tst0_len, tst1_len, twoTail, frq, work)
+		inv=inversions(tst0_len, tester0, tst1_len, tester1);
+		if(tagged) std::cout<<tag<<" ";
+		std::cout<<wilcoxon_p_value(inv, tst0_len, tst1_len, hyp, frq, work)
 			<<std::endl;
 	}
 

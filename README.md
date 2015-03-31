@@ -22,6 +22,5 @@ the hypothesis parametesr is (only one is allowed in one run):
 -l (--lower, --lower-tail) for alternative med(x) >= med(y) (lower tail)
 -u (--upper, --upper-tail) for alternative med(x) <=med(y)  (upper tail)
 
-The first two are integers, the other are doubles.
-If the stream stops before all the N+M values are read
-or the first two values 
+The first two numerics in cycle are to be integers, the other are doubles.
+Stops on end-of-stream or if or the first given length (not tag) is zero. 
