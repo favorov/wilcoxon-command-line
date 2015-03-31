@@ -14,6 +14,7 @@ $Id$
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 extern "C" {
 	#include "wilcoxon.h"
@@ -90,6 +91,8 @@ int main(int argc,char ** argv)
 	double *work; //[gene_sets_number]
 	//we will test+alloc frq and size inside p_value code
 
+	std::istream * istream_ptr=&std::cin;
+	
 	bool tagged=false;
 	hypothesis hyp=twoTail;
 
@@ -210,8 +213,21 @@ int main(int argc,char ** argv)
 	if (args.size()!=arguments_reflected)
 	{
 		bool lastarg_filename_ok=false;
-		if (args.size()==arguments_reflected+1)
+		if (arguments_reflected+1==args.size())
 		{
+			std::string last_arg=args[arguments_reflected]; //last
+			if ('-'!=last_arg.c_str()[0])
+			{
+				istream_ptr=new std::ifstream(last_arg.c_str());
+				std::cout<<last_arg<<std::endl;
+				if (*istream_ptr)
+					lastarg_filename_ok=true;
+				else
+				{
+					std::cerr<<"File "<<last_arg<<" is not readable.\n";
+					exit(-20);
+				}
+			}
 		};
 		if (!lastarg_filename_ok)
 		{
@@ -238,7 +254,7 @@ int main(int argc,char ** argv)
 
  	std::istream_iterator<std::string> eos;              // end-of-stream iterator
 
-	for(std::istream_iterator<std::string> input (std::cin);input!=eos;input++)
+	for(std::istream_iterator<std::string> input(*istream_ptr);input!=eos;input++)
 	{
 		char * ptr; 
 		const char * str;
@@ -335,6 +351,6 @@ int main(int argc,char ** argv)
 		std::cout<<wilcoxon_p_value(inv, tst0_len, tst1_len, hyp, frq, work)
 			<<std::endl;
 	}
-
+	delete istream_ptr;
 }
 
