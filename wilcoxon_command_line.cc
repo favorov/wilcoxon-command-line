@@ -207,6 +207,18 @@ int main(int argc,char ** argv)
 		arguments_reflected++;
 	}
 
+	if (args.size()!=arguments_reflected)
+	{
+		bool lastarg_filename_ok=false;
+		if (args.size()==arguments_reflected+1)
+		{
+		};
+		if (!lastarg_filename_ok)
+		{
+			std::cerr<<"It seemes to me that some arguments are unknown.  Ask wilcoxon-command-line --help.\n";
+			exit(-10);
+		}
+	}
 
 
 	frq=(double*)calloc(usual_frq_size,sizeof(double));
