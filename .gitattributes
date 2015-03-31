@@ -3,6 +3,7 @@ Makefile ident
 README* ident
 *.txt ident
 *.c ident
+*.cc ident
 *.cpp ident
 *.h ident
 *.hpp ident
