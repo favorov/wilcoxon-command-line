@@ -1,6 +1,5 @@
 /***************************************************************\
-  APSampler. Looking for complex genetic interaction patterns 
- by a Metropolis-Hastings MCMC project. (c) A. Favorov 1999-2010
+wilcoxon-command-line (c) A. Favorov 2015	
     $Id$
 \***************************************************************/
 
@@ -18,7 +17,36 @@ extern "C" {
 	#include "wilcoxon.h"
 }
 
+/*
+wilcoxon-command-line
+Command-line utitlity to calculate Wilcoxon p-value
 
+wilcoxon-command-line [swithes] < input 
+
+If --taged switch is not given, the input is:
+N_1 M_1 x_1_1.....x_N_1 y_1_1......y_M_1 
+N_2 M_2 x_1_2.....x_N_2 y_1_2......y_M_2
+.......
+in cycle.
+
+If --tagged (-t) switch is given, the input is:
+tag1 N_1 M_1 x_1_1.....x_N_1 y_1_1......y_M_1 
+tag2 N_2 M_2 x_1_2.....x_N_2 y_1_2......y_M_2
+.......
+in cycle. The tag has no spaces.
+
+Each group N,M and M+N values after it is one test (one p-value)
+
+the hypothesis parametesr is (only one is allowed in one run): 
+-w (--two, --two-tail) for two-tail (default)
+-l (--lower, --lower-tail) for alternative med(x) >= med(y) (lower tail)
+-u (--upper, --upper-tail) for alternative med(x) <=med(y)  (upper tail)
+
+The first two are integers, the other are doubles.
+If the stream stops before all the N+M values are read
+or the first two values 
+	
+*/
 int main(int argc,char ** argv)
 {
 	unsigned long tst0_len,tst1_len,inv,counter=0;
@@ -27,6 +55,22 @@ int main(int argc,char ** argv)
 	double *frq; //[(gene_sets_number+1)/2) * ((gene_sets_number+1)/2)+1]
 	double *work; //[gene_sets_number]
 	//we will test+alloc frq and size inside p_value code
+
+	
+	bool tagged;
+	hypothesis hyp;
+
+
+
+
+
+
+
+
+
+
+
+
 
 	frq=(double*)calloc(usual_frq_size,sizeof(double));
 	assert(frq);
