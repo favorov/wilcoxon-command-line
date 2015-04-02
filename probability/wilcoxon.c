@@ -231,9 +231,12 @@ double wilcoxon_p_value_exp
 {
 	double tail;
 	tail=cgauss(wilcoxon_norm_equvalent(i,m,n));
-	
+	//debug
+	//printf("\n%g->%g\n",wilcoxon_norm_equvalent(i,m,n),tail);
+	//debug	
 	if (lowerTail==hyp) return tail; 
 	if (upperTail==hyp) return 1-tail;
+	if (tail>.5) tail=1.-tail; //we take little tail
 	return 2.*tail;
 }
 
