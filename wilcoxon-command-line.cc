@@ -219,7 +219,6 @@ int main(int argc,char ** argv)
 			if ('-'!=last_arg.c_str()[0])
 			{
 				istream_ptr=new std::ifstream(last_arg.c_str());
-				std::cout<<last_arg<<std::endl;
 				if (*istream_ptr)
 					lastarg_filename_ok=true;
 				else
@@ -348,6 +347,9 @@ int main(int argc,char ** argv)
 
 		inv=inversions(tst0_len, tester0, tst1_len, tester1);
 		if(tagged) std::cout<<tag<<" ";
+		//debug
+		//std::cout<<tst0_len<<"  "<<tst1_len<<"   "<<inv<<std::endl;
+		//debug
 		std::cout<<wilcoxon_p_value(inv, tst0_len, tst1_len, hyp, frq, work)
 			<<std::endl;
 	}
