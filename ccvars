@@ -15,43 +15,15 @@ else
 endif
 endif
 
-uname_info=$(shell uname -a)
-ifeq (Darwin,$(findstring Darwin,$(uname_info)))
-	MAC=MAC
-endif
-ifeq (Cygwin,$(findstring Cygwin,$(uname_info)))
-	CYGWIN=CYGWIN
-endif
 
 gcc_version_info=$(shell gcc --version)
-gcc_4_test=) 4
-gcc_3_test=) 3
-LVM_6_test=LLVM version 6.0
 
-ifeq ($(gcc_4_test), $(findstring $(gcc_4_test),$(gcc_version_info)))
-	GCC4=GCC4
-endif
-
-ifeq ($(LVM_6_test), $(findstring $(LVM_6_test),$(gcc_version_info)))
-	GCC4=GCC4
-endif
+gcc_3_test=) 3.
 
 ifeq ($(gcc_3_test), $(findstring $(gcc_3_test),$(gcc_version_info)))
 	GCC3=GCC3
 endif
 
-
-ifndef GCC3
-ifndef GCC4
-$(error GCC major version is neither 3 nor 4, gcc --version says:$(gcc_version_info).)
-endif
-endif
-
-ifdef GCC3
-ifdef GCC4
-$(error GCC major version cannot be 3 and 4 at one time)
-endif
-endif
 
 LINKFLAGS=-lm
 DEBUGFLAG=-g
@@ -63,7 +35,7 @@ PARANOIC_FLAG=-Wextra
 MINGW_FLAG=-mno-cygwin
 PPRO_FLAG=-mpentiumpro
 
-ifdef GCC4 
+ifndef GCC3 
 	INCLUDEKEY=-iquote
 	INCLUDECLOSETERM=
 else #GCC3
@@ -71,18 +43,16 @@ else #GCC3
 	INCLUDECLOSETERM= -I-
 endif
 
-ifdef MAC
-ifdef GCC4
+ifndef GCC3
 OMITSYMBOLINFOFLAG=
 # -s is obsoleted for mac, gcc4
 endif
-endif
 
-ifdef CYGWIN
-ifdef GCC4
-LINKFLAGS=$(LINKGLAGS) 
-endif
-endif
+#ifdef CYGWIN
+#ifndef GCC3 #actually, it is 4
+#LINKFLAGS=$(LINKGLAGS) -enable-auto-import
+#endif
+#endif
 
 ifndef PROFFLAG
  PROFFLAG=-pg

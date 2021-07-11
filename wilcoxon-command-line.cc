@@ -26,7 +26,7 @@ Command-line utitlity to calculate Wilcoxon p-value
 
 wilcoxon-command-line [switches] < input 
 
-If --taged switch is not given, the input is:
+If --tagged switch is not given, the input is:
 N_1 M_1 x_1_1.....x_N_1 y_1_1......y_M_1 
 N_2 M_2 x_1_2.....x_N_2 y_1_2......y_M_2
 .......
@@ -58,7 +58,7 @@ std::cout<<std::endl<<
 ""<<std::endl<<
 "wilcoxon-command-line [switches] < input "<<std::endl<<
 ""<<std::endl<<
-"If --taged switch is not given, the input is:"<<std::endl<<
+"If --tagged switch is not given, the input is:"<<std::endl<<
 "N_1 M_1 x_1_1.....x_N_1 y_1_1......y_M_1 "<<std::endl<<
 "N_2 M_2 x_1_2.....x_N_2 y_1_2......y_M_2"<<std::endl<<
 "......."<<std::endl<<
@@ -258,6 +258,7 @@ int main(int argc,char ** argv)
 		char * ptr; 
 		const char * str;
 		std::string tag;
+		if (input->c_str()[0]=='#') input++; //one-word comment
 		if (tagged)
 		{
 			counter++;
@@ -353,6 +354,5 @@ int main(int argc,char ** argv)
 		std::cout<<wilcoxon_p_value(inv, tst0_len, tst1_len, hyp, frq, work)
 			<<std::endl;
 	}
-	delete istream_ptr;
 }
 
